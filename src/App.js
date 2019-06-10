@@ -1,26 +1,52 @@
 import React from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+import { fetchUsers } from './actions/users';
+import Card from './components/Card';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+	componentDidMount () {
+		this.props.fetchUsers();
+	}
+
+	render () {
+		const { user, fetchUsers } = this.props;
+
+		if (!user) {
+			return (
+				<div>Loading...</div>
+			);
+		}
+
+		return (
+			<Card
+				onPictureClick={fetchUsers}
+				name={user.name}
+				gender={user.gender}
+				picture={user.picture}>
+				My Card
+			</Card>
+
+		);
+	}
 }
 
-export default App;
+export default connect(
+	state => ({
+		user: state.users[0],
+	}),
+	{
+		fetchUsers: fetchUsers,
+	},
+)(App);
+
+
+
+
+
+
+
+
+
+
